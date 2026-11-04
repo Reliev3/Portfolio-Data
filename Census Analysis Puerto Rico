@@ -1,0 +1,211 @@
+#Instalacion de paquetes
+install.packages("tidycensus")
+install.packages("tidyverse")
+install.packages("janitor")
+install.packages("purrr")
+install.packages("dplyr")
+install.packages("tidyr")
+install.packages("data.table")
+
+#Activacion de paquetes
+library(tidycensus)
+library(tidyverse)
+library(janitor)
+library(purrr)
+library(dplyr)
+library(tidyr)
+library(data.table)
+
+#Activar API del Censo. Entrar codigo API usando comillas ""
+census_api_key("00bd97051ecc23de4c25d76e92c060ab7a358b63", overwrite = TRUE, install = TRUE)
+
+#Obtención de variables según número de tabla especificado por el Negociado del Censo
+
+vars<- c(
+  Median_Income_12mo = "B19113_001", 
+  Pop_under_total =  "B17001_001",
+  Pop_under_povln = "B17001_002",
+  Pop_with_public_assistance_total = "B19057_002",
+  Pop_with_public_assistance_income = "B19057_002",
+  Pop_no_public_assistance_income = "B19057_003",
+  Owner_occ_housing_units = "B25032_002",
+  Renter_occ_housing_units = "B25032_013",
+  Occupied_housing_units = "B25032_001",
+  Vacant_housing_units = "B25002_003",
+  Median_Home_value = "B25077_001",
+  Median_Rent = "B25064_001",
+  Median_mortgage_payment ="B25088_002",
+  Median_HH_income ="B19013_001",
+  Median_age = "B01002_001",
+  totpop= "B01001_001",
+  popund5_m="B01001_003",
+  pop5to9_m="B01001_004",
+  pop10to14_m="B01001_005",
+  pop15to17_m="B01001_006",
+  pop18to19_m="B01001_007",
+  pop20_m="B01001_008",
+  pop21_m="B01001_009",
+  pop22to24_m="B01001_010",
+  pop25to29_m="B01001_011",
+  pop30to34_m="B01001_012",
+  pop35to39_m="B01001_013",
+  pop40to44_m="B01001_014",
+  pop45to49_m="B01001_015",
+  pop50to54_m="B01001_016",
+  pop55to59_m="B01001_017",
+  pop60to61_m="B01001_018", 
+  pop62to64_m="B01001_019", 
+  pop65to66_m="B01001_020",
+  pop67to69_m="B01001_021", 
+  pop70to74_m="B01001_022",
+  pop75to79_m="B01001_023", 
+  pop80to84_m="B01001_024",
+  pop85plus_m="B01001_025",
+  popund5_f="B01001_027",
+  pop5to9_f="B01001_028", 
+  pop10to14_f="B01001_029", 
+  pop15to17_f="B01001_030",
+  pop18to19_f="B01001_031", 
+  pop20_f="B01001_032", 
+  pop21_f="B01001_033", 
+  pop22to24_f="B01001_034",
+  pop25to29_f="B01001_035", 
+  pop30to34_f="B01001_036",
+  pop35to39_f="B01001_037", 
+  pop40to44_f="B01001_038",
+  pop45to49_f="B01001_039", 
+  pop50to54_f="B01001_040",
+  pop55to59_f="B01001_041",
+  pop60to61_f="B01001_042", 
+  pop62to64_f="B01001_043", 
+  pop65to66_f="B01001_044",
+  pop67to69_f="B01001_045", 
+  pop70to74_f="B01001_046",
+  pop75to79_f="B01001_047", 
+  pop80to84_f="B01001_048",
+  pop85plus_f="B01001_049",
+  commute_total = "B08303_001",
+  commute_und5 = "B08303_002",
+  commute_5to9 = "B08303_003",
+  commute_10to14 = "B08303_004",
+  commute_15to19 = "B08303_005",
+  commute_20to24 = "B08303_006",
+  commute_25to29 = "B08303_007",
+  commute_30to34 = "B08303_008",
+  commute_35to39 = "B08303_009",
+  commute_40to44 = "B08303_010",
+  commute_45to59 = "B08303_011",
+  commute_60to89 = "B08303_012",
+  commute_90plus = "B08303_013",
+  transp_total = "B08301_001",
+  transp_car_truck_van_alone = "B08301_003",
+  transp_car_truck_van_carpool = "B08301_004",
+  transp_publictransportation = "B08301_010", 
+  transp_taxi = "B08301_016",
+  transp_motorcycle = "B08301_017",
+  transp_bycicle = "B08301_018",
+  transp_walked = "B08301_019",
+  transp_othermeans = "B08301_020",
+  transp_workathome = "B08301_021",
+  educ_total = "B06009PR_001",
+  educ_lessthanHS = "B06009PR_002",
+  educ_highschool = "B06009PR_003",
+  educ_somecollege_associates = "B06009PR_004" ,
+  educ_bachelors = "B06009PR_005",
+  educ_graduate_professional = "B06009PR_006",
+  Income_total = "B07010PR_001",
+  Income_noincome = "B07010PR_002",
+  Income_1_9999 = "B07010_004" ,
+  Income_10k_14.9k = "B07010_005" ,
+  Income_15k_24.9k = "B07010_005" ,
+  Income_25k_34.9k = "B07010_005" ,
+  Income_35k_49.9k = "B07010_005" ,
+  Income_50k_64.9k = "B07010_005" ,
+  Income_65k_74.9k = "B07010_005" ,
+  Income_75kplus = "B07010_005" ,
+  Moved_total = "B07010PR_001",
+  Moved_same_house = "B07010PR_012" ,
+  Moved_within_municipio = "B07010PR_023",
+  Moved_from_oth_municipio = "B07010PR_034" ,
+  Moved_from_US = "B07010PR_045" ,
+  Moved_from_oth_country = "B07010PR_056" ,
+  employment_sex = "B23001_001" )
+
+
+
+varstarea2 <- c(
+  totpop = "B01001_001",             # Población total
+  Median_HH_income = "B19013_001",   # Mediana de ingreso
+  Median_age = "B01002_001",         # Mediana de edad
+  Pop_poverty_total = "B17001_001",  # Total para calcular % de pobreza
+  Pop_under_povln = "B17001_002",    # Población bajo nivel de pobreza
+  Labor_force_total = "B23025_001",  # Población 16+ (Base para calcular empleo)
+  Employed = "B23025_004",           # Población empleada
+  Unemployed = "B23025_005"          # Población desempleada
+)
+
+years<- list(2014,2019,2024)
+
+#Generar tablas
+
+PuertoRicocensus<- map_dfr(
+  years,
+  ~   get_acs(
+    geography = "state",
+    state = "PR",
+    variables = vars,
+    year = .x,
+    survey = "acs5",
+    output="wide"),
+  .id = "year") 
+
+PuertoRico_municipio_census<- map_dfr(
+  years,
+  ~   get_acs(
+    geography = "county",
+    state = "PR",
+    variables = vars,
+    year = .x,
+    survey = "acs5",
+    output="wide"),
+  .id = "year")
+
+PuertoRico_tract_census<- map_dfr(
+  years,
+  ~   get_acs(
+    geography = "tract",
+    state = "PR",
+    variables = vars,
+    year = .x,
+    survey = "acs5",
+    output="wide"),
+  .id = "year")
+
+PuertoRico_barrio_census<- map_dfr(
+  years,
+  ~   get_acs(
+    geography = "county subdivision",
+    state = "PR",
+    county = "Ponce",
+    variables = varstarea2,
+    year = .x,
+    survey = "acs5",
+    output="wide"),
+  .id = "year")
+
+
+
+PuertoRicocensus$year= as.numeric(PuertoRicocensus$year)+2009
+PuertoRico_municipio_census$year= as.numeric(PuertoRico_municipio_census$year)+2009
+PuertoRico_tract_census$year= as.numeric(PuertoRico_tract_census$year)+2009
+PuertoRico_barrio_census$year= as.numeric(PuertoRico_barrio_census$year)+2009
+
+#Generar archivos en CSV
+write.csv(PuertoRicocensus, file = 'PuertoRico_Census.csv')
+write.csv(PuertoRico_municipio_census, file = 'PuertoRico_Municipios_Census.csv')
+write.csv(PuertoRico_tract_census, file = 'PuertoRico_Tracts_Census.csv')
+write.csv(PuertoRico_barrio_census, file = 'PuertoRico_barrio_Census.csv')
+
+variables<-load_variables(year = 2024, "acs5", cache = TRUE)
+write.csv(variables, file = "PRCS_2024_Variables.csv")
+
