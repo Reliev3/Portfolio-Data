@@ -1,0 +1,13 @@
+library("foreign")
+
+empleos <- read.csv("empleos_municipios.csv")
+
+
+construccion <- empleos[which(empleos$naics == 23), ]
+
+
+hist(construccion$lnsalariototal[which(construccion$costero==0)])
+hist(construccion$lnsalariototal[which(construccion$costero==1)])
+
+
+t.test(construccion$lnsalariototal ~ construccion$costero)
